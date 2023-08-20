@@ -43,7 +43,7 @@ exports.getPurchasePremium = async (req,res,next) => {
             const promise1 = order.update({status: 'FAILED'});
             const promise2 = req.user.update({ispremiumuser: 'false'});
     
-            Promise.all[promise1, promise2]. then(() =>{
+            Promise.all([promise1, promise2]).then(() =>{
                 return res.status(202).json({success: false, message: "Transaction Failed"})
             }).catch((err) => {throw new Error(err)});
     
@@ -52,13 +52,14 @@ exports.getPurchasePremium = async (req,res,next) => {
             const promise1 = order.update({paymentid: payment_id, status: 'SUCCESSFUL'});
             const promise2 = req.user.update({ispremiumuser: 'true'});
     
-            Promise.all[promise1, promise2]. then(() =>{
+            Promise.all([promise1, promise2]).then(() =>{
                 return res.status(202).json({success: true, message: "Transaction Successful"})
             }).catch((err) => {throw new Error(err)});
         }
        
 
     } catch(err){
+        console.log(err);
         res.status(403).json({message: "Something went Wrong", error:err})
         }
 }
