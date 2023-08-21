@@ -35,14 +35,13 @@ exports.getPurchasePremium = async (req,res,next) => {
 }
 
 const generatetokenid = (id,name,ispremiumuser) => {   
+    console.log('token regenerate')
     return jwt.sign({ userId:id, name:name, ispremiumuser:ispremiumuser}, 'thesecretkeyweassign') 
 }
 
  exports. postUpdateTransactionStatus= async (req,res,next) => {
 
     try{
-        const userId = req.user.userId;
-        const ispremiumuser = req.user.ispremiumuser;
         const {payment_id, order_id} = req.body;
 
         if(!payment_id){   //if transaction has failed, there is no payment id
@@ -60,7 +59,7 @@ const generatetokenid = (id,name,ispremiumuser) => {
             const promise2 = req.user.update({ispremiumuser: true});
     
             Promise.all([promise1, promise2]).then(() =>{
-                return res.status(202).json({success: true, message: "Transaction Successful", token: generatetokenid(userId,undefined,ispremiumuser)})
+                return res.status(202).json({success: true, message: "Transaction Successful", token: generatetokenid( req.user.id,undefined,req.user.ispremiumuser)})
             }).catch((err) => {throw new Error(err)});
         }
        
